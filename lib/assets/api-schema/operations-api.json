@@ -1,0 +1,107 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AWS Infrastructure & Operations Automation API",
+        "version": "1.0.0",
+        "description": "APIs for managing AWS Infrastructure by pulling a list of resources in alert state, identifying root cause for each alert, take remediation steps to fix operational issues and sending notifications to operations team."
+    },
+    "paths": {
+        "/get_all_alerts": {
+            "get": {
+                "summary": "Get a list of all resources in AWS account in alert state",
+                "description": "Get a list of all resources in AWS account in alert state based on cloud watch Metrics",
+                "operationId": "get_all_alerts",
+                "responses": {
+                    "200": {
+                        "description": "list of all resources in AWS account in alert state based on cloud watch Metrics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "ID": {
+                                                "type": "string",
+                                                "description": "unique ID of the AWS resource"
+                                            },
+                                            "ResourceType": {
+                                                "type": "string",
+                                                "description": "Type of resource ie. EC2, DynamoDB table, Lambda Function"
+                                            },
+                                            "State": {
+                                                "type": "string",
+                                                "description": "High CPU utilization, throttling or high error rate"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+                "/send-Notification": {
+            "post": {
+                "summary": "API to send Notification to operations team with details about issues and remediation steps taken to fix operational issue",
+                "description": "API to send Notification to operations team with details about issues and remediation steps taken to fix operational issue",
+                "operationId": "sendNotification",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "emailaddress": {
+                                        "type": "string",
+                                        "description": "email address to send notifications"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "description": "subject of email notification"
+                                    },
+"email_body": {
+                                        "type": "string",
+                                        "description": "body of email notification containing details of issue and all remediation steps taken by agent"
+                                    }
+                                },
+                                "required": [
+                                    "emailaddress",
+                                    "subject",
+                                    "email_body"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Notifications sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "sendReminderTrackingId": {
+                                            "type": "string",
+                                            "description": "Unique Id to track the status of the send Notificaiton"
+                                        },
+                                        "sendReminderStatus": {
+                                            "type": "string",
+                                            "description": "Status of send notifications"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. One or more required fields are missing or invalid."
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,108 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AWS EC2 Operations Automation API",
+        "version": "1.0.0",
+        "description": "APIs for managing EC2 and take remediation steps to fix operational issues"
+    },
+    "paths": {
+        
+        "/create_snapshot_of_EC2_volume": {
+            "post": {
+                "summary": "API to create snapshot of EBS volume of affected EC2 instance",
+                "description": "API to create snapshot of EBS volume of affected EC2 instance",
+                "operationId": "create_snapshot_of_EC2_volume",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "instanceARN": {
+                                        "type": "string",
+                                        "description": "arn of affected EC2 instance"
+                                    }
+                                    
+                                },
+                                "required": [
+                                    "instanceARN"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ARN of created snapshot of EBS volume of affected EC2 instance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "snapshotARN": {
+                                            "type": "string",
+                                            "description": "arn of EBS volume's snapshot"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. One or more required fields are missing or invalid."
+                    }
+                }
+            }
+        },
+        
+        "/restart_ec2_instance": {
+            "post": {
+                "summary": "API to restart affected ec2 instance",
+                "description": "API to restart affected ec2 instance",
+                "operationId": "restart_ec2_instance",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "instanceARN": {
+                                        "type": "string",
+                                        "description": "arn of affected EC2 instance"
+                                    }
+                                    
+                                },
+                                "required": [
+                                    "instanceARN"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "True if restarted affected ec2 instance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "snapshotARN": {
+                                            "type": "bool",
+                                            "description": "True if restarted EC2 instance"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. One or more required fields are missing or invalid."
+                    }
+                }
+            }
+        }
+    }
+}
