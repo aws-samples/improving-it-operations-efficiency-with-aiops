@@ -65,13 +65,13 @@ def lambda_handler(event, context):
         'responseBody': response_body
     }
     
-    session_attributes = event['sessionAttributes']
+ #   session_attributes = event['sessionAttributes']
     prompt_session_attributes = event['promptSessionAttributes']
     
     api_response = {
         'messageVersion': '1.0', 
         'response': action_response,
-        'sessionAttributes': session_attributes,
+ #      'sessionAttributes': session_attributes,
         'promptSessionAttributes': prompt_session_attributes
     }
         
