@@ -121,7 +121,7 @@ To allow the Amazon Bedrock agent to invoke the necessary AWS Lambda functions, 
 - Service: `bedrock.amazonaws.com`
 - Source ARN: `arn:aws:bedrock:us-east-1:xxxx:agent/xxxxxxxx` (Replace with your agent's ARN)
 - Action: `lambda:InvokeFunction`
-![update resource based policy](static/updateresourcebased policy.png)
+![update resource based policy](static/updateresourcebased_policy.png)
 
 ## Step 6: Prepare and Test the Agent
 
