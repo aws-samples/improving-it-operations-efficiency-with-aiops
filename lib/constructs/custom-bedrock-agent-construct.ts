@@ -32,12 +32,70 @@ export class CustomBedrockAgentConstruct extends Construct {
     });
 
     bedrockAgentCustomResourceRole.addToPolicy(new cdk.aws_iam.PolicyStatement({
-      actions: ['*'],
+      actions: [          
+        
+      'iam:PassRole'
+
+      ],
       resources: 
-        ['arn:aws:cloudwatch:*','arn:aws:bedrock:*', props.s3BucketArn, `arn:aws:iam::${awsAccountId}:role/${props.bedrockAgentRoleName}`]
+        [`arn:aws:iam::${awsAccountId}:role/${props.bedrockAgentRoleName}`
+        ]
     }));
 
 
+    bedrockAgentCustomResourceRole.addToPolicy(new cdk.aws_iam.PolicyStatement({
+      actions: [          
+        'lambda:InvokeFunction'
+
+      ],
+      resources: 
+        [`arn:aws:iam::${awsAccountId}:role/${props.bedrockAgentRoleName}`]
+        
+    }));    
+
+    bedrockAgentCustomResourceRole.addToPolicy(new cdk.aws_iam.PolicyStatement({
+      actions:[  
+      
+      'cloudwatch:PutMetricAlarm',
+      'cloudwatch:DeleteAlarms', // Add CloudWatch permissions
+
+
+      ],
+      resources: 
+        [`arn:aws:cloudwatch:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:alarm:Web_Server_CPU_Utilization`,
+        ]
+    }));
+
+    bedrockAgentCustomResourceRole.addToPolicy(new cdk.aws_iam.PolicyStatement({
+      actions: [          
+      
+      'bedrock:InvokeModel',
+      'bedrock:CreateAgent',
+      'bedrock:CreateAgentActionGroup',
+      'bedrock:ListAgents',
+      'bedrock:DeleteAgent',
+      
+      
+
+      ],
+      resources: 
+        [`arn:aws:bedrock:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}::foundation-model/anthropic.claude-*`,
+          `arn:aws:bedrock:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:agent/*`,
+           `arn:aws:bedrock:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:agent-alias/*`,
+           `arn:aws:bedrock:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:agent/*`
+        ]
+    }));
+
+    bedrockAgentCustomResourceRole.addToPolicy(new cdk.aws_iam.PolicyStatement({
+      actions: [          
+      
+      's3:GetObject'
+
+      ],
+      resources: 
+        [ props.s3BucketArn
+        ]
+    }));
 
     const onEvent = new cdk.aws_lambda.Function(this, 'BedrockAgentCustomResourceFunction', {
       runtime: cdk.aws_lambda.Runtime.PYTHON_3_10,

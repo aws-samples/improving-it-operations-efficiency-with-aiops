@@ -23,6 +23,20 @@ export class S3KBConstruct extends Construct {
       enforceSSL: true,
     });
 
+    s3Bucket.addToResourcePolicy(new cdk.aws_iam.PolicyStatement({
+      actions: ['s3:*'],
+      principals:[new cdk.aws_iam.AnyPrincipal()],
+      effect:cdk.aws_iam.Effect.DENY,
+      resources:  [`arn:aws:s3:::${name}-bucket`,
+        `arn:aws:s3:::${name}-bucket/*`],
+      conditions:{
+        "Bool": {
+            "aws:SecureTransport": "false"
+        }
+        
+    }
+    }));
+
     new cdk.aws_s3_deployment.BucketDeployment(this, "KBBucket", {
       sources: [
         cdk.aws_s3_deployment.Source.asset(

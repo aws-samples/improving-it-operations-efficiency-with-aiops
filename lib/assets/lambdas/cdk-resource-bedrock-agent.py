@@ -121,26 +121,25 @@ def create_cloudwatch_alarm(instanceId):
  cloudwatch.put_metric_alarm(
     AlarmName='Web_Server_CPU_Utilization',
     ComparisonOperator='GreaterThanThreshold',
-    EvaluationPeriods=1,
+    EvaluationPeriods=2,
+    DatapointsToAlarm=1,
     MetricName='CPUUtilization',
     Namespace='AWS/EC2',
     Period=60,
-    Statistic='Average',
-    Threshold=70.0,
+    Statistic='Maximum',
+    Threshold=90.0,
     ActionsEnabled=False,
-    AlarmDescription='Alarm when server CPU exceeds 70%',
+    AlarmDescription='Alarm when server CPU exceeds 90%',
     Dimensions=[
         {
           'Name': 'InstanceId',
           'Value': instanceId
         },
-    ],
-    Unit='Seconds'
- )
+    ] )
 
 def delete_agent(agent_name):
     # Get list of all agents
-    response = agent_client.list_agents()
+    response = agent_client.list_agents(maxResults=100)
     print('This is agent name from delete: ', agent_name)
     # Find agent with the given name
     for agent in response["agentSummaries"]:

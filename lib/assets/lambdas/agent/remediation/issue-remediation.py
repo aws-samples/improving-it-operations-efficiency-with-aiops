@@ -7,7 +7,10 @@ def lambda_handler(event, context):
     print(event)
     if (event['apiPath']=='/create_snapshot_of_EC2_volume'):
         print('inner')
-        instanceid=event['requestBody']['content']['application/json']['properties'][0]['value'].split('/')[1]
+        instanceid=event['requestBody']['content']['application/json']['properties'][0]['value']
+        if (len(instanceid.split('/'))>1):
+            instanceid=instanceid.split('/')[1]
+            
         
         
         volume_id=ec2.describe_instances(InstanceIds=[instanceid])['Reservations'][0]['Instances'][0]['BlockDeviceMappings'][0]['Ebs']['VolumeId']
@@ -18,7 +21,10 @@ def lambda_handler(event, context):
             }
         }
     else:
-        instanceid=event['requestBody']['content']['application/json']['properties'][0]['value'].split('/')[1]
+        instanceid=event['requestBody']['content']['application/json']['properties'][0]['value']
+        if (len(instanceid.split('/'))>1):
+            instanceid=instanceid.split('/')[1]        
+        
         response=ec2.reboot_instances(InstanceIds=[instanceid])
 
         response_body = {

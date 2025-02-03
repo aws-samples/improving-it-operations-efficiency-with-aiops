@@ -22,6 +22,9 @@ export class BedrockIamConstruct extends Construct {
       assumedBy: new cdk.aws_iam.ServicePrincipal('bedrock.amazonaws.com'),
     });
 
+    const awsAccountId = cdk.Stack.of(this).account;
+
+
     const bedrockAgentLambdaPolicy = new cdk.aws_iam.Policy(this, "BedrockAgentLambdaPolicy", {
       policyName: "BedrockAgentLambdaPolicy",
       statements: [
@@ -29,7 +32,7 @@ export class BedrockIamConstruct extends Construct {
           effect: cdk.aws_iam.Effect.ALLOW,
           resources: [props.lambdaRoleArn],
           actions: [
-            '*',
+            'lambda:InvokeFunction',
         ]})
       ]
     });
@@ -41,7 +44,7 @@ export class BedrockIamConstruct extends Construct {
           effect: cdk.aws_iam.Effect.ALLOW,
           resources: [props.s3BucketArn, `${props.s3BucketArn}/*`],
           actions: [
-            '*',
+            's3:GetObject',
         ]})
       ]
     });
@@ -51,9 +54,23 @@ export class BedrockIamConstruct extends Construct {
       statements: [
         new cdk.aws_iam.PolicyStatement({
           effect: cdk.aws_iam.Effect.ALLOW,
-          resources: ['*'],
+          resources: [`arn:aws:bedrock:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}::foundation-model/anthropic.claude-*`],
           actions: [
-            'bedrock:*',
+            'bedrock:InvokeModel',
+        ]})
+      ]
+    });
+
+    const bedrockAgentKBPolicy = new cdk.aws_iam.Policy(this, "BedrockAgentKBPolicy", {
+      policyName: "BedrockAgentKBPolicy",
+      statements: [
+        new cdk.aws_iam.PolicyStatement({
+          effect: cdk.aws_iam.Effect.ALLOW, 
+          resources: [
+            `arn:aws:bedrock:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:knowledge-base/*`
+          ],
+          actions: [
+            'bedrock:Retrieve',
         ]})
       ]
     });
@@ -66,6 +83,8 @@ export class BedrockIamConstruct extends Construct {
     bedrockAgentRole.attachInlinePolicy(bedrockAgentLambdaPolicy);
     bedrockAgentRole.attachInlinePolicy(bedrockAgentS3BucketPolicy);
     bedrockAgentRole.attachInlinePolicy(bedrockAgentBedrockModelPolicy);
+    bedrockAgentRole.attachInlinePolicy(bedrockAgentKBPolicy);
+    
     
     new cdk.CfnOutput(this, "BedrockAgentRoleArn", {
       value: bedrockAgentRole.roleArn,

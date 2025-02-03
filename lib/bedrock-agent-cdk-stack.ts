@@ -5,7 +5,6 @@ import { BedrockIamConstruct } from './constructs/bedrock-agent-iam-construct';
 import { LambdaIamConstruct } from './constructs/lambda-iam-construct';
 import { LambdaConstruct } from './constructs/lambda-construct';
 import { CustomBedrockAgentConstruct } from './constructs/custom-bedrock-agent-construct';
-import {EC2Construct} from './constructs/ec2-construct'
 import { Construct } from 'constructs';
 import * as cdk from "aws-cdk-lib";
 import {SESConstruct} from './constructs/ses-construct'
@@ -19,6 +18,7 @@ export interface BedrockAgentCdkProps extends cdk.StackProps {
   readonly remediationlambdaFile: string;
   readonly ec2InstanceId:string;
   readonly instruction:string;
+  
 }
 
 export class BedrockAgentCdkStack extends cdk.Stack {
@@ -48,7 +48,7 @@ export class BedrockAgentCdkStack extends cdk.Stack {
    
     
 
-    const lambdaRole = new LambdaIamConstruct(this, `LambdaIamConstruct-${randomPrefix}`, { roleName: lambdaRoleName });
+    const lambdaRole = new LambdaIamConstruct(this, `LambdaIamConstruct-${randomPrefix}`, { roleName: lambdaRoleName, email:emailAddressParam.valueAsString, instanceId: props. ec2InstanceId  });
   
     const s3Construct = new S3Construct(this, `agent-assets-${randomPrefix}`, {});
     const s3kbConstruct = new S3KBConstruct(this, `agent-kb-${randomPrefix}`, {});
