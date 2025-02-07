@@ -98,7 +98,7 @@ export class CustomBedrockAgentConstruct extends Construct {
     }));
 
     const onEvent = new cdk.aws_lambda.Function(this, 'BedrockAgentCustomResourceFunction', {
-      runtime: cdk.aws_lambda.Runtime.PYTHON_3_10,
+      runtime: cdk.aws_lambda.Runtime.PYTHON_3_13,
       handler: 'cdk-resource-bedrock-agent.on_event',
       code: cdk.aws_lambda.Code.fromAsset("lib/assets/lambdas"),
       architecture: cdk.aws_lambda.Architecture.X86_64,

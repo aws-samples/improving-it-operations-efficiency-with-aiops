@@ -2,6 +2,7 @@ import { Construct } from 'constructs';
 import * as cdk from "aws-cdk-lib";
 import * as iam from 'aws-cdk-lib/aws-iam';
 
+
 export interface LambdaIamProps extends cdk.StackProps {
   readonly roleName: string;
   readonly email:string;
@@ -119,7 +120,7 @@ export class LambdaIamConstruct extends Construct {
       })
     );
 
-   
+      
 
     new cdk.CfnOutput(this, "LambdaRoleArn", {
       value: lambdaRole.roleArn,

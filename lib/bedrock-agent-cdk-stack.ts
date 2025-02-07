@@ -8,6 +8,7 @@ import { CustomBedrockAgentConstruct } from './constructs/custom-bedrock-agent-c
 import { Construct } from 'constructs';
 import * as cdk from "aws-cdk-lib";
 import {SESConstruct} from './constructs/ses-construct'
+import { NagSuppressions } from 'cdk-nag'
 
 
 
@@ -50,6 +51,28 @@ export class BedrockAgentCdkStack extends cdk.Stack {
 
     const lambdaRole = new LambdaIamConstruct(this, `LambdaIamConstruct-${randomPrefix}`, { roleName: lambdaRoleName, email:emailAddressParam.valueAsString, instanceId: props. ec2InstanceId  });
   
+    NagSuppressions.addStackSuppressions(this, [
+             {
+               id: 'AwsSolutions-IAM5',
+               reason: 'In order to take EC2 snapshot permissons on all volumes and snapshots needed'
+             },
+             
+           ])
+    NagSuppressions.addStackSuppressions(this, [
+            {
+              id: 'AwsSolutions-S1',
+              reason: 'Demonstrate a stack level suppression.'
+            },
+          ])
+
+    NagSuppressions.addStackSuppressions(this, [
+            {
+              id: 'AwsSolutions-IAM4',
+              reason: 'Custom CDK Resource need Admin permission for stack deployment'
+            },
+          ])
+
+
     const s3Construct = new S3Construct(this, `agent-assets-${randomPrefix}`, {});
     const s3kbConstruct = new S3KBConstruct(this, `agent-kb-${randomPrefix}`, {});
     const bedrockAgentRole = new BedrockIamConstruct(this, `BedrockIamConstruct-${randomPrefix}`, { 
@@ -96,7 +119,13 @@ export class BedrockAgentCdkStack extends cdk.Stack {
     customBedrockAgentConstruct.node.addDependency(bedrockAgentRole);
     customBedrockAgentConstruct.node.addDependency(agentAlertLambdaConstruct);
     customBedrockAgentConstruct.node.addDependency(agentRemediationLambdaConstruct);
-
+    
+    NagSuppressions.addStackSuppressions(this, [
+      {
+        id: 'AwsSolutions-L1',
+        reason: 'Custom CDK Resource required to just deployment of stack'
+      },
+    ])
     
   }
 }

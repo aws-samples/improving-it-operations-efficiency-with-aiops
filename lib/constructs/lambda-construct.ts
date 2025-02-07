@@ -21,7 +21,7 @@ export class LambdaConstruct extends Construct {
     props = { ...defaultProps, ...props };
 
     const bedrockAgentLambda = new cdk.aws_lambda.Function(this, "BedrockAgentLambda", {
-      runtime: cdk.aws_lambda.Runtime.PYTHON_3_10,
+      runtime: cdk.aws_lambda.Runtime.PYTHON_3_13,
       handler: `${props.lambdaFile}.lambda_handler`,
       code: cdk.aws_lambda.Code.fromAsset(props.assetFilePath),
       timeout: cdk.Duration.seconds(300),

@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+
+import { AwsSolutionsChecks } from 'cdk-nag'
+import { Aspects } from 'aws-cdk-lib';
+
+
+
 import 'source-map-support/register';
 import * as path from 'path';
 import * as glob from 'glob';
@@ -6,8 +12,10 @@ import * as cdk from "aws-cdk-lib";
 import { BedrockAgentCdkStack } from '../lib/bedrock-agent-cdk-stack';
 import { EC2CdkStack } from '../lib/ec2-cdk-stack';
 
-
 const app = new cdk.App();
+// Add the cdk-nag AwsSolutions Pack with extra verbose logging enabled.
+Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }))
+
 
 // Get the spec file found in lambda dir
 const specAlertDir = 'lib/assets/api-schema'; 

@@ -4,6 +4,7 @@ import * as cw from 'aws-cdk-lib/aws-cloudwatch';
 import * as cwActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import { Construct } from 'constructs';
 import * as cdk from "aws-cdk-lib";
+import { NagSuppressions } from 'cdk-nag'
 
 
 export class EC2Construct extends Construct {
@@ -30,6 +31,21 @@ export class EC2Construct extends Construct {
     });
 
     this.instanceId = ec2Instance.instanceId;
+
+    NagSuppressions.addResourceSuppressions(ec2Instance, [
+      {
+        id: 'AwsSolutions-EC26',
+        reason: 'Demo EC2 instance to show loadtesting, EBS volume contains no data'
+      },
+      {
+        id: 'AwsSolutions-EC28',
+        reason: 'Demo EC2 instance to show loadtesting, no need to have ASG'
+      },
+      {
+        id: 'AwsSolutions-EC29',
+        reason: 'Demo EC2 instance to show loadtesting, not part of ASG so termination protection not required'
+      },
+    ])
 
   }
 }
