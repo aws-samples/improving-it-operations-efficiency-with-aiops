@@ -47,10 +47,27 @@ export class LambdaIamConstruct extends Construct {
     // 1
     lambdaRole.addToPolicy(
       new iam.PolicyStatement({
+        sid:'ec2volume',
+        effect: iam.Effect.ALLOW,
+        resources: [`arn:aws:ec2:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:volume/vol-*`
+        ],
+        actions: [            
+        'ec2:CreateSnapshot',
+        'ec2:CreateTags'
+        ],
+        conditions: {
+          StringLike: {
+            'aws:ResourceTag/Name': '*/Loadtest-EC2Instance'
+          }
+        }
+      })
+    );
+
+    lambdaRole.addToPolicy(
+      new iam.PolicyStatement({
         sid:'ec2snapshot',
         effect: iam.Effect.ALLOW,
         resources: [`arn:aws:ec2:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}::snapshot/*`,
-          `arn:aws:ec2:${process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION}:${awsAccountId}:volume/vol-*`
         ],
         actions: [            
         'ec2:CreateSnapshot',

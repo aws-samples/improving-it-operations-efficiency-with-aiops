@@ -61,7 +61,7 @@ export class BedrockAgentCdkStack extends cdk.Stack {
     NagSuppressions.addStackSuppressions(this, [
             {
               id: 'AwsSolutions-S1',
-              reason: 'Demonstrate a stack level suppression.'
+              reason: 'S3 bucket will be only accessed on KB creation'
             },
           ])
 

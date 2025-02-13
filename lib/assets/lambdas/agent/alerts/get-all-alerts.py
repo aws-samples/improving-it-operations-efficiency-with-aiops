@@ -31,6 +31,7 @@ def lambda_handler(event, context):
                 os.environ.get('EMAIL_ADDRESS')
             ],
         },
+        ConfigurationSetName='MyDemoConfigurationSet',
         Message={
             'Body': {
                 

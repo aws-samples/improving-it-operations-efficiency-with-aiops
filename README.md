@@ -102,7 +102,7 @@ After creating the knowledge base, we add it to an existing agent named `AIOps-a
 4. Provide the instruction: "Knowledgde base contains runbooks to fix operational issues in resources in aws account."
 
 ```
-Knowlegdge base contains runbooks to fix operational issues in resources in aws account
+Knowledge base contains runbooks to fix operational issues in resources in aws account
 
 ```
 ![add Knowledgebase](static/addKnowledgebase.png)

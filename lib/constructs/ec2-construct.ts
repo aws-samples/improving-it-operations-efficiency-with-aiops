@@ -27,7 +27,8 @@ export class EC2Construct extends Construct {
       vpc,
       vpcSubnets: { subnets: [publicSubnet] },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO),
-      machineImage: ec2.MachineImage.latestAmazonLinux2()
+      machineImage: ec2.MachineImage.latestAmazonLinux2(),
+      propagateTagsToVolumeOnCreation:true
     });
 
     this.instanceId = ec2Instance.instanceId;
